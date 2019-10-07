@@ -8,8 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viewmodellivedatarecyclerviewkotlin.R
 import com.example.viewmodellivedatarecyclerviewkotlin.model.Note
+import kotlinx.android.synthetic.main.note_item_view.view.*
 
-class NoteAdapter: ListAdapter<Note, NoteAdapter.NoteViewHolder>(DIFFCALLBACK()) {
+class NoteAdapter:
+    ListAdapter<Note, NoteAdapter.NoteViewHolder>(DIFFCALLBACK()) {
+    var onNoteItemClickListener: OnNoteItemClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.note_item_view,
             parent, false)
@@ -17,12 +21,25 @@ class NoteAdapter: ListAdapter<Note, NoteAdapter.NoteViewHolder>(DIFFCALLBACK())
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val note = getItem(position)
+        holder.bind(note, onNoteItemClickListener)
     }
 
-    class NoteViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        fun bind(note: Note){
+    class NoteViewHolder(itemView: View):
+        RecyclerView.ViewHolder(itemView){
+        fun bind(note: Note, onNoteItemClickListener: OnNoteItemClickListener?){
+            itemView.notePriority.text = note.priority.toString()
+            itemView.noteTitle.text = note.title
+            itemView.noteDescription.text = note.description
 
+            if(onNoteItemClickListener != null) {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION){
+                    itemView.setOnClickListener {
+                        onNoteItemClickListener.onNoteClicked(note)
+                    }
+                }
+            }
         }
     }
 
@@ -40,4 +57,8 @@ class NoteAdapter: ListAdapter<Note, NoteAdapter.NoteViewHolder>(DIFFCALLBACK())
 
         }
     }
+}
+
+interface OnNoteItemClickListener{
+    fun onNoteClicked(note: Note)
 }
