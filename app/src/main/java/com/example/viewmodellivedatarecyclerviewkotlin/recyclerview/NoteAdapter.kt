@@ -43,6 +43,8 @@ class NoteAdapter:
         }
     }
 
+    fun noteAt(position: Int) = getItem(position)
+
     companion object{
         class DIFFCALLBACK: DiffUtil.ItemCallback<Note>(){
             override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {

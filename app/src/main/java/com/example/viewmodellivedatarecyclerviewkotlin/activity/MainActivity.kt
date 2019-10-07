@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.viewmodellivedatarecyclerviewkotlin.R
 import com.example.viewmodellivedatarecyclerviewkotlin.constants.*
 import com.example.viewmodellivedatarecyclerviewkotlin.model.Note
@@ -30,6 +32,28 @@ class MainActivity : AppCompatActivity(), OnNoteItemClickListener {
 
         createViewModel()
         createRecyclerView(this)
+        createItemTouchHelper()
+    }
+
+    private fun createItemTouchHelper() {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(1, ItemTouchHelper.LEFT.or
+            (ItemTouchHelper.RIGHT)){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when(direction){
+                    ItemTouchHelper.LEFT -> noteViewModel.deleteNote(noteAdapter.noteAt(viewHolder.adapterPosition))
+                    ItemTouchHelper.RIGHT -> moveToDetailActivity(request = REQUEST_ADD)
+                }
+
+            }
+        }).attachToRecyclerView(noteRecyclerView)
     }
 
     private fun createViewModel() {
@@ -66,6 +90,7 @@ class MainActivity : AppCompatActivity(), OnNoteItemClickListener {
         } else if(requestCode == REQUEST_ADD){
             if (resultCode == Activity.RESULT_OK){
                 noteViewModel.addNote(note)
+                noteAdapter.notifyDataSetChanged()
             }
         }
     }
