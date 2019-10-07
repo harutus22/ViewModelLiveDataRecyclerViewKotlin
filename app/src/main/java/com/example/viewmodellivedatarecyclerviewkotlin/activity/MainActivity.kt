@@ -17,6 +17,7 @@ import com.example.viewmodellivedatarecyclerviewkotlin.model.Note
 import com.example.viewmodellivedatarecyclerviewkotlin.recyclerview.NoteAdapter
 import com.example.viewmodellivedatarecyclerviewkotlin.recyclerview.OnNoteItemClickListener
 import com.example.viewmodellivedatarecyclerviewkotlin.viewmodel.NoteViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -48,10 +49,19 @@ class MainActivity : AppCompatActivity(), OnNoteItemClickListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when(direction){
-                    ItemTouchHelper.LEFT -> noteViewModel.deleteNote(noteAdapter.noteAt(viewHolder.adapterPosition))
+                    ItemTouchHelper.LEFT -> {
+                        val note = noteAdapter.noteAt(viewHolder.adapterPosition)
+                        noteAdapter.removedNote = note
+                        val snackBar = Snackbar.make(floatingActionButton, "Item deleted", Snackbar.LENGTH_LONG)
+                        snackBar.setAction("Undo") {
+                            noteViewModel.addNote(note)
+                            Snackbar.make(floatingActionButton, "Item is restored!", Snackbar.LENGTH_SHORT).show()
+                        }
+                        noteViewModel.deleteNote(note)
+                        snackBar.show()
+                    }
                     ItemTouchHelper.RIGHT -> moveToDetailActivity(request = REQUEST_ADD)
                 }
-
             }
         }).attachToRecyclerView(noteRecyclerView)
     }

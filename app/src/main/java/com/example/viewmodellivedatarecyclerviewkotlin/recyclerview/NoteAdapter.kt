@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.note_item_view.view.*
 class NoteAdapter:
     ListAdapter<Note, NoteAdapter.NoteViewHolder>(DIFFCALLBACK()) {
     var onNoteItemClickListener: OnNoteItemClickListener? = null
+    lateinit var removedNote: Note
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.note_item_view,
