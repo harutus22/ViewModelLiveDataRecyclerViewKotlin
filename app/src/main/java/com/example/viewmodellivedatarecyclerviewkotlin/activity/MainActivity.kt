@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnNoteItemClickListener {
     val noteAdapter = NoteAdapter()
-    lateinit var noteViewModel: NoteViewModel
+    val noteViewModel: NoteViewModel by lazy {
+        ViewModelProviders.of(this).get(NoteViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +33,6 @@ class MainActivity : AppCompatActivity(), OnNoteItemClickListener {
     }
 
     private fun createViewModel() {
-        noteViewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
         noteViewModel.noteLiveData.observe(this, Observer {
             noteAdapter.submitList(it)
         })
@@ -45,13 +47,13 @@ class MainActivity : AppCompatActivity(), OnNoteItemClickListener {
     }
 
     override fun onNoteClicked(note: Note) {
-        moveToDetailActivity(note)
+        moveToDetailActivity(note, NOTE_EDIT, REQUEST_EDIT)
     }
 
-    private fun moveToDetailActivity(note: Note?) {
+    private fun moveToDetailActivity(note: Note? = null, mission: String? = null, request: Int = REQUEST_ADD) {
         val intent = Intent(this, AddEditActivity::class.java)
-        intent.putExtra(NOTE_EDIT, note)
-        startActivityForResult(intent, REQUEST_EDIT)
+        intent.putExtra(mission, note)
+        startActivityForResult(intent, request)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -66,5 +68,9 @@ class MainActivity : AppCompatActivity(), OnNoteItemClickListener {
                 noteViewModel.addNote(note)
             }
         }
+    }
+
+    fun addNote(view: View){
+        moveToDetailActivity(request = REQUEST_ADD)
     }
 }

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "note_table")
 class Note(
-    @PrimaryKey(autoGenerate = true) var id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "title_column") var title: String?,
     @ColumnInfo(name = "description_column") var description: String?,
     @ColumnInfo(name = "priority_column") var priority: Int): Parcelable {

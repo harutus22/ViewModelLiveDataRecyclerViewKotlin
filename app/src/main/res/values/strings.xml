@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">ViewModelLiveDataRecyclerViewKotlin</string>
+    <string name="title">Title</string>
+    <string name="input_the_title">Input the title</string>
+    <string name="description">Description</string>
+    <string name="input_description">Input description</string>
+    <string name="rating">Rating</string>
+    <string name="input_the_rating">Input the rating</string>
+    <string name="save">Save</string>
+
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+
+    <string-array name="spinnerRating">
+        <item>@string/one</item>
+        <item>@string/two</item>
+        <item>@string/three</item>
+        <item>@string/four</item>
+        <item>@string/five</item>
+    </string-array>
 </resources>
